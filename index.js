@@ -1,12 +1,3 @@
-
-
-
-
-const questions = [
-	{
-		type: "list",
-		name: "departments",
-		message: "",
-		choices: ["viewDepartments","viewRoles","viewEmployees","addDepartment","addRoles","addEmployees","updateRole",]
-	}
-]
+const inquirer = require('inquirer');
+const question = require('./helpers/questions')
+//create 

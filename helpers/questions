@@ -1,0 +1,45 @@
+// Remember, DRY code!
+
+const fileName = ('./db/schema.sql')
+
+const questionConstructor = class { 
+	constructor(type, name, message) {
+		this.type = type,
+		this.name = name,
+		this.message = message
+	}
+}
+
+
+function promptOptions() {
+	inquirer
+	.prompt([
+		{
+		type: "list",
+		name: "departments",
+		message: "What would you like to do?",
+		choices: ["View All Employees","View All Roles","View All Departments", "Add Employee","Update Employee Role","Add Role","Add Department", "Quit"]
+		}])
+	.then(question => {
+		switch(){
+		}
+	})
+
+}
+
+
+
+function writeToFile(fileName, data) {
+	return fs.writeFileSync(path.join(fileName, futurePath),data);
+}
+
+function initQuestion() {
+	inquirer.prompt(questions)
+	.then((answer) => {
+		console.log(responses);
+		writeToFile("./db/schema.sql", addToDb({ ...answer}));
+	})
+}
+
+modules.export = { init }
+

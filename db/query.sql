@@ -1,36 +1,42 @@
-DROP DATABASE IF EXISTS company_db;
+SELECT * FROM role,
+INNER JOIN department_id ON department.department_id; = role.id;
+
+SELECT * FROM role JOIN department_names ON department. = department.name
+
+
+DROP DATABASE IF EXISTS employees_db;
 CREATE DATABASE company_db;
 USE company_db;
 
 CREATE TABLE departments(
-	department_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	name VARCHAR(30) NOT NULL
 );
 
 CREATE TABLE roles(
-	role_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	title VARCHAR(30) NOT NULL,
 	salary DECIMAL NOT NULL,
 	department_id INT NOT NULL,
 	FOREIGN KEY (department_id)
-	REFERENCES departments(department_id)
+	REFERENCES departments(id)
 	ON DELETE CASCADE
 );
 
 CREATE TABLE employees(
-	employee_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	first_name VARCHAR(30) NOT NULL,
 	last_name VARCHAR(30) NOT NULL,
 	role_id INT NOT NULL,
-	FOREIGN KEY (role_id) REFERENCES roles(role_id) ON DELETE CASCADE,
+	FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE,
 	manager_id INT,
 	FOREIGN KEY (manager_id)
-   REFERENCES employees(employee_id) 
-   ON DELETE SET NULL
+    REFERENCES employees(id) 
+    ON DELETE SET NULL
 );
 
 INSERT INTO departments(name)
-VALUES ("Development"),("Research"),("Human Resources"),("Accounting"),("Legal");
+VALUES ("Development"),("Research"),("Human Resources"),("DepartmentFuture");
 
 INSERT INTO roles(title, salary, department_id)
 VALUES ('Head Process Engineer', 80000, 1),
@@ -57,9 +63,5 @@ VALUES ('Aaron', 'Lam', 1, NULL),
 ('John', 'Richards', 9, NULL),
 ('Chris', 'McIntyre', 10, 9);
 
-SELECT * EMPLOYEES;
-
-
-SELECT department_id, name FROM departments;
-
-SELECT employee_name, employee_id, 
+SELECT * FROM department;
+SELECT id, name FROM departments;

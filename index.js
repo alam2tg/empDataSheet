@@ -1,8 +1,20 @@
 const inquirer = require('inquirer');
-const question = require('./helpers/questions');
 const db = require('./config/connection');
 
 //create initial prompt with list of options. 
+
+class qConstructor {
+	constructor(type, name, message) {
+		this.type = type;
+		this.name = name;
+		this.message = message;
+	}
+	introduce() {
+		console.log(`Type = ${this.type}, Name = ${this.name}, Message = ${this.message}`)
+	}
+}
+const testQuestion = new qConstructor('type1','name1','message1');
+testQuestion.introduce();
 
 function promptOptions() {
 	inquirer

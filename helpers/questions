@@ -2,30 +2,46 @@
 
 const fileName = ('./db/schema.sql')
 
-const questionConstructor = class { 
+class questionConstructor { 
 	constructor(type, name, message) {
-		this.type = type,
-		this.name = name,
-		this.message = message
+		this.type = type;
+		this.name = name;
+		this.message = message;
 	}
 }
 
+// continue by adding questions for each prompt. Return answers for questions. Use answers to fill data. Use 'const question1 new questionConstructor'
+//this.type =, this.name =, this.message =, .then()...
+//maybe switch operator?
 
 function promptOptions() {
 	inquirer
 	.prompt([
 		{
 		type: "list",
-		name: "departments",
+		name: "options",
 		message: "What would you like to do?",
 		choices: ["View All Employees","View All Roles","View All Departments", "Add Employee","Update Employee Role","Add Role","Add Department", "Quit"]
 		}])
-	.then(question => {
-		switch(){
+	.then(res => {
+		if (res.options === 'View All Employees') {
 		}
+		if (res.options === 'View All Roles') {
+		}
+		if (res.options === 'View All Departments') {
+		}
+		if (res.options === 'Add Employees') {
+		}
+		if (res.options === 'Update Employee Role') {
+		}
+		if (res.options === 'Add Department') {
+		}
+		if (res.options === 'Quit') {
+		}
+	
+	
 	})
 
-}
 
 
 
@@ -33,7 +49,7 @@ function writeToFile(fileName, data) {
 	return fs.writeFileSync(path.join(fileName, futurePath),data);
 }
 
-function initQuestion() {
+function initQuestions() {
 	inquirer.prompt(questions)
 	.then((answer) => {
 		console.log(responses);
@@ -41,5 +57,5 @@ function initQuestion() {
 	})
 }
 
-modules.export = { init }
+modules.export = { initQuestions , questionConstructor};
 

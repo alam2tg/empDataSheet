@@ -1,7 +1,4 @@
 // Remember, DRY code!
-
-const fileName = ('./db/schema.sql')
-
 class questionConstructor { 
 	constructor(type, name, message) {
 		this.type = type;
@@ -10,67 +7,5 @@ class questionConstructor {
 	}
 }
 
-// continue by adding questions for each prompt. Return answers for questions. Use answers to fill data. Use 'const question1 new questionConstructor'
-//this.type =, this.name =, this.message =, .then()...
-//maybe switch operator?
-
-function promptOptions() {
-	inquirer
-	.prompt([
-		{
-		type: "list",
-		name: "options",
-		message: "What would you like to do?",
-		choices: ["View All Employees","View All Roles","View All Departments", "Add Employee","Update Employee Role","Add Role","Add Department", "Quit"]
-		}])
-	.then(res => {
-		if (res.options === 'View All Employees') {
-		}
-		if (res.options === 'View All Roles') {
-		}
-		if (res.options === 'View All Departments') {
-		}
-		if (res.options === 'Add Employees') {
-		}
-		if (res.options === 'Update Employee Role') {
-		}
-		if (res.options === 'Add Department') {
-		}
-		if (res.options === 'Quit') {
-		}
-	
-	
-	})
-}
-promptOptions();
-
-const viewAllEmployees = ()=> {
-	db.query('SELECT * FROM employees', (err,data) => {
-		if (err) console.log(err)
-		console.table(data)
-		promptOptions();
-	})
-}
-
-const viewAllRoles = ()=> {
-	db.query('SELECT * FROM roles', (err,data) => {
-		if (err) console.log(err)
-		console.table(data)
-		promptOptions();
-	})
-}
-
-const viewAllDepartments = ()=> {
-	db.query('SELECT * FROM department', (err,data) => {
-		if (err) console.log(err)
-		console.table(data)
-		promptOptions();
-	})
-}
-
-//query's to db, if err, logs err, display data with console.table. 
-
-
-
-modules.export = { initQuestions , questionConstructor};
+modules.export = { questionConstructor };
 

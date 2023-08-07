@@ -3,7 +3,8 @@ const db = require('./config/connection');
 
 //create initial prompt with list of options. 
 
-class qConstructor {
+//qConstructor can speed up process of making prompts/questions.
+class prompt {
 	constructor(type, name, message) {
 		this.type = type;
 		this.name = name;
@@ -13,8 +14,10 @@ class qConstructor {
 		console.log(`Type = ${this.type}, Name = ${this.name}, Message = ${this.message}`)
 	}
 }
-const testQuestion = new qConstructor('type1','name1','message1');
+
+const testQuestion = new prompt('type1','name1','message1');
 testQuestion.introduce();
+
 
 function promptOptions() {
 	inquirer
@@ -43,8 +46,6 @@ function promptOptions() {
 		}
 		if (res.options === 'Quit') {
 		}
-	
-	
 	})
 }
 promptOptions();
@@ -76,10 +77,46 @@ const viewAllDepartments = ()=> {
 //query's to db, if err, logs err, display data with console.table. 
 
 const addNewEmployee = ()=> {
+
+
 	db.query('SELECT * FROM employees', (err,data) => {
 		if (err) console.log(err)
-		const employee = data.map(employees => {
-			return { name: employee.first_name + employee.last_name, value: employee.id }
+		const employees = data.map(employee => {
+			return { name: employee.first_name + " " + employee.last_name, value: employee.id }
+		})
+		employees.push({ name: "no manager", value: null })
+		db.query('SELECT * FROM roles', (err,data) => {
+			if(err) console.log(err)
+			const roles = data.map(role => {
+				return{ name: role.title, value: role.id }
+			})
+
+		inquirer.prompt([
+			{
+				type: "input",
+				name: "firstName",
+				message: "What is the employess first name?"
+		  },
+		  {
+				type: 'input',
+				name: "lastName",
+				message: "What is the employees last name?"
+		  },
+		  {
+				type: "list",
+				name: "roleId",
+				message: "What role would this employee do?",
+				choices: roles
+		  },
+		  {
+				type: "list",
+				name: "managerId",
+				message: "Does this emplyee have a manager?",
+				choices: employees
+		  },
+		])
+		.then(res => {
+			db.query()
+		})
 	})
-	})
-}
+})}

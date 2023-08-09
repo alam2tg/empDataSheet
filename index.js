@@ -15,9 +15,9 @@ function promptOptions() {
 					"View All Roles",
 					"View All Departments",
 					"Add Employee",
-					"Update Employee Role",
 					"Add Role",
 					"Add Department",
+					"Update Employee Role",
 				]
 			}
 		)
@@ -34,14 +34,14 @@ function promptOptions() {
 			if (res.options === "Add Employee") {
 				addEmployee()
 			}
-			if (res.options === "Update Employee Role") {
-				updateEmployee()
-			}
 			if (res.options === "Add Role") {
 				addRole()
 			}
 			if (res.options === "Add Department") {
 				addDepartment()
+			}
+			if (res.options === "Update Employee Role") {
+				updateEmployee()
 			}
 		})	
 }
@@ -112,17 +112,17 @@ const addEmployee = () => {
 				])
 				.then(res => {
 					db.query('INSERT INTO employee(first_name, last_name, role_id, manager_id) values(?, ?, ?, ?)',
-						[res.firstName, res.lastName, res.roleId, res.managerId],
-						(err, data) => {
+						[res.firstName, res.lastName, res.roleId, res.managerId], (err, data) => {
 							if (err) console.log(err)
 							console.table(data)
-							promptOptions()
+							promptOptions();
 						})
 				})
 		})
 	})
 };
 
+// add role... select department data first as it's data is required to properly add a role. first query department, .then query roles, INSERT INTO to add.
 const addRole = () => {
 	db.query('SELECT * FROM department', (err, data) => {
 		 if (err) console.log(err)
@@ -146,15 +146,31 @@ const addRole = () => {
 					name: 'departmentId',
 					message: 'What department does this role belong to?',
 					choices: departments
-			  }
-		 ])
-			  .then(res => {
-					db.query('INSERT INTO roles(title,salary, department_id) values(?, ?, ?)', [res.title, res.salary, res.departmentId], (err, data) => {
-						 if (err) console.log(err)
-						 console.table(data)
-						 menu()
-					})
-			  })
+			  }])
+		.then(res => {
+			db.query('INSERT INTO roles(title, salary, department_id) values(?, ?, ?)', [res.title, res.salary, res.departmentId], (err, data) => {
+					if (err) console.log(err)
+					console.table(data)
+					promptOptions();
+			})
+		})
 	})
-	
+};
+
+//similar with role, but easier because the department table is independent.
+const addDepartment = () => {
+	inquirer.prompt([
+		 {
+			  type: "input",
+			  name: "newDepartment",
+			  message: "Enter the new department into database."
+		 }])
+	.then(res => {
+		 db.query("INSERT INTO department(name) values(?)", [res.newDepartment], (err, data) => {
+			  if (err) console.log(err)
+			  console.table(data)
+			  console.log(`New department ${res.newDepartment} has been added`)
+			  promptOptions();
+		 })
+	})
 };

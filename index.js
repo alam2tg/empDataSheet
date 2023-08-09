@@ -237,10 +237,10 @@ const updateEmployee = () => {
 				.then((updates) => {
 					const employeeId = updates.employeeUpdate;
 					const roleId = updates.roleUpdate;
+					console.log(roleId, employeeId)
 					const sqlUpdate ='UPDATE employee SET role_id =' + roleId + ' WHERE id = ' + employeeId;
 					db.query(sqlUpdate, (err, res) => {
 						if (err) console.log(err);
-						console.log(`Employee ${employeeId} role updated to ${roleId}  updated. `);
 						promptOptions();
 					});
 				});

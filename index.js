@@ -92,23 +92,23 @@ const addEmployee = () => {
 				.prompt([
 					{
 						type: "input",
-						name: 'firstName',
-						message: 'What is the employee's first name?',
+						name: "firstName",
+						message: "What is the employee's first name?",
 					},{
-						type: 'input',
-						name: 'lastName',
-						message: 'What is the employee's last name?',
+						type: "input",
+						name: "lastName",
+						message: "What is the employee's last name?",
 					},{
-						type: 'list',
-						name: 'roleId',
-						message: 'What is their role?',
-						choices: roles,
+						type: "list",
+						name: "roleId",
+						message: "What is their role?",
+						choices: roles
 					},{
-						type: 'list',
-						name: 'managerId',
-						message: 'Does this employee have a manager?',
-						choices: employees,
-					},
+						type: "list",
+						name: "managerId",
+						message: "Does this employee have a manager?",
+						choices: employees
+					}
 				])
 				.then(res => {
 					db.query('INSERT INTO employee(first_name, last_name, role_id, manager_id) values(?, ?, ?, ?)',
@@ -149,7 +149,7 @@ const addRole = () => {
 			  }
 		 ])
 			  .then(res => {
-					db.query('INSERT INTO roles(title,salary, dept_id) values(?, ?, ?)', [res.title, res.salary, res.departmentId], (err, data) => {
+					db.query('INSERT INTO roles(title,salary, department_id) values(?, ?, ?)', [res.title, res.salary, res.departmentId], (err, data) => {
 						 if (err) console.log(err)
 						 console.table(data)
 						 menu()

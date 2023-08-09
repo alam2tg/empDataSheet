@@ -3,26 +3,9 @@ const db = require("./config/connection");
 
 //create initial prompt with list of options.
 
-//qConstructor can speed up process of making prompts/questions.
-class prompt {
-	constructor(type, name, message) {
-		this.type = type;
-		this.name = name;
-		this.message = message;
-	}
-	introduce() {
-		console.log(
-			`Type = ${this.type}, Name = ${this.name}, Message = ${this.message}`
-		);
-	}
-}
-
-const testQuestion = new prompt("type1", "name1", "message1");
-testQuestion.introduce();
-
 function promptOptions() {
 	inquirer
-		.prompt([
+		.prompt(
 			{
 				type: "list",
 				name: "options",
@@ -35,60 +18,62 @@ function promptOptions() {
 					"Update Employee Role",
 					"Add Role",
 					"Add Department",
-					"Quit",
-				],
-			},
-		])
+				]
+			}
+		)
 		.then((res) => {
 			if (res.options === "View All Employees") {
-				viewAllEmployees();
+				viewAllEmployees()
 			}
 			if (res.options === "View All Roles") {
-				viewAllRoles();
+				viewAllRoles()
 			}
 			if (res.options === "View All Departments") {
-				viewAllDepartments();
+				viewAllDepartments()
 			}
 			if (res.options === "Add Employee") {
-				addNewEmployee();
+				addEmployee()
 			}
 			if (res.options === "Update Employee Role") {
+				updateEmployee()
+			}
+			if (res.options === "Add Role") {
+				addRole()
 			}
 			if (res.options === "Add Department") {
+				addDepartment()
 			}
-			if (res.options === "Quit") {
-			}
-		});
+		})	
 }
-promptOptions();
+promptOptions()
 
 const viewAllEmployees = () => {
-	db.query('SELECT * FROM `table` WHERE `employee`', (err, data) => {
-		if (err) console.log(err);
+	db.query("SELECT * FROM employee", (err, data) => {
+		if (err) console.log(err)
 		console.table(data)
 		promptOptions();
-	});
+	})
 };
 
 const viewAllRoles = () => {
-	db.query("SELECT * FROM `table` role", (err, data) => {
-		if (err) console.log(err);
+	db.query("SELECT * FROM roles", (err, data) => {
+		if (err) console.log(err)
 		console.table(data)
 		promptOptions();
-	});
+	})
 };
 
 const viewAllDepartments = () => {
-	db.query("SELECT * FROM `table` department", (err, data) => {
-		if (err) console.log(err);
+	db.query("SELECT * FROM department", (err, data) => {
+		if (err) console.log(err)
 		console.table(data)
 		promptOptions();
-	});
+	})
 };
 
 //query's to db, if err, logs err, display data with console.table.
 
-const addNewEmployee = () => {
+const addEmployee = () => {
 	db.query("SELECT * FROM employee", (err, data) => {
 		if (err) console.log(err);
 		const employees = data.map((employee) => {
@@ -134,8 +119,8 @@ const addNewEmployee = () => {
 						"INSERT INTO employee(first_name, last_name, role_id, manager_id) values(?, ?, ?, ?)",
 						[res.firstName, res.lastName, res.roleId, res.managerId],
 						(err, data) => {
-							if (err) console.log(err);
-							console.table(data);
+							if (err) console.log(err)
+							console.table(data)
 							promptOptions();
 						}
 					);

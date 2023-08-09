@@ -1,5 +1,5 @@
-const inquirer = require("inquirer");
-const db = require("./config/connection");
+const inquirer = require('inquirer');
+const db = require('./config/connection');
 
 //create initial prompt with list of options.
 
@@ -48,7 +48,7 @@ function promptOptions() {
 promptOptions()
 
 const viewAllEmployees = () => {
-	db.query("SELECT * FROM employee", (err, data) => {
+	db.query('SELECT * FROM employee', (err, data) => {
 		if (err) console.log(err)
 		console.table(data)
 		promptOptions();
@@ -56,15 +56,15 @@ const viewAllEmployees = () => {
 };
 
 const viewAllRoles = () => {
-	db.query("SELECT * FROM roles", (err, data) => {
+	db.query('SELECT * FROM roles', (err, data) => {
 		if (err) console.log(err)
 		console.table(data)
-		promptOptions();
+		promptOptions()
 	})
 };
 
 const viewAllDepartments = () => {
-	db.query("SELECT * FROM department", (err, data) => {
+	db.query('SELECT * FROM department', (err, data) => {
 		if (err) console.log(err)
 		console.table(data)
 		promptOptions();
@@ -74,57 +74,87 @@ const viewAllDepartments = () => {
 //query's to db, if err, logs err, display data with console.table.
 
 const addEmployee = () => {
-	db.query("SELECT * FROM employee", (err, data) => {
-		if (err) console.log(err);
-		const employees = data.map((employee) => {
+	db.query('SELECT * FROM employee', (err, data) => {
+		if (err) console.log(err)
+		const employees = data.map(employee => {
 			return {
-				name: employee.first_name + " " + employee.last_name,
+				name: employee.first_name + ' ' + employee.last_name,
 				value: employee.id,
-			};
-		});
-		employees.push({ name: "no manager", value: null });
-		db.query("SELECT * FROM role", (err, data) => {
-			if (err) console.log(err);
-			const roles = data.map((role) => {
-				return { name: role.title, value: role.id };
+			}
+		})
+		employees.push({ name: 'no manager', value: null });
+		db.query('SELECT * FROM roles', (err, data) => {
+			if (err) console.log(err)
+			const roles = data.map(role => {
+				return { name: role.title, value: role.id }
 			});
-
 			inquirer
 				.prompt([
 					{
 						type: "input",
-						name: "firstName",
-						message: "What is the employee's first name?",
-					},
-					{
-						type: "input",
-						name: "lastName",
-						message: "What is the employee's last name?",
-					},
-					{
-						type: "list",
-						name: "roleId",
-						message: "What is their role?",
+						name: 'firstName',
+						message: 'What is the employee's first name?',
+					},{
+						type: 'input',
+						name: 'lastName',
+						message: 'What is the employee's last name?',
+					},{
+						type: 'list',
+						name: 'roleId',
+						message: 'What is their role?',
 						choices: roles,
-					},
-					{
-						type: "list",
-						name: "managerId",
-						message: "Does this employee have a manager?",
+					},{
+						type: 'list',
+						name: 'managerId',
+						message: 'Does this employee have a manager?',
 						choices: employees,
 					},
 				])
-				.then((res) => {
-					db.query(
-						"INSERT INTO employee(first_name, last_name, role_id, manager_id) values(?, ?, ?, ?)",
+				.then(res => {
+					db.query('INSERT INTO employee(first_name, last_name, role_id, manager_id) values(?, ?, ?, ?)',
 						[res.firstName, res.lastName, res.roleId, res.managerId],
 						(err, data) => {
 							if (err) console.log(err)
 							console.table(data)
-							promptOptions();
-						}
-					);
-				});
-		});
-	});
+							promptOptions()
+						})
+				})
+		})
+	})
+};
+
+const addRole = () => {
+	db.query('SELECT * FROM department', (err, data) => {
+		 if (err) console.log(err)
+		 const departments = data.map(department => {
+			  return { name: department.name, value: department.id }
+		 })
+		 inquirer.prompt([
+			  {
+					type: 'input',
+					name: 'title',
+					message: 'What is the title of the role?'
+			  },
+			  {
+					type: 'input',
+					name: 'salary',
+					message: 'What is the salary of this role?'
+			  },
+
+			  {
+					type: 'list',
+					name: 'departmentId',
+					message: 'What department does this role belong to?',
+					choices: departments
+			  }
+		 ])
+			  .then(res => {
+					db.query('INSERT INTO roles(title,salary, dept_id) values(?, ?, ?)', [res.title, res.salary, res.departmentId], (err, data) => {
+						 if (err) console.log(err)
+						 console.table(data)
+						 menu()
+					})
+			  })
+	})
+	
 };

@@ -1,6 +1,15 @@
 const inquirer = require('inquirer');
 const db = require('./config/connection');
 
+
+// class draft {
+// 	constructor(type, name, message) {
+// 		this.type = type;
+// 		this.name = name; 
+// 		this.message = message;
+// 	}
+// }
+
 //create initial prompt with list of options.
 
 function promptOptions() {
@@ -174,3 +183,16 @@ const addDepartment = () => {
 		 })
 	})
 };
+
+//create function to update employee. query select the data, map data to a const, then push the data.
+
+const updateEmployee = () => {
+	db.query('SELECT * FROM employee', (err, data) => {
+		 if (err) console.log(err)
+		 const employees = data.map(employee => {
+			  return { name: employee.first_name + " " + employee.last_name, value: employee.id }
+		 })
+		 employees.push({ name: "no manager", value:null })
+
+
+})}

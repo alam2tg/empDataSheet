@@ -1,14 +1,6 @@
 const inquirer = require("inquirer");
 const db = require("./config/connection");
 
-// class draft {
-// 	constructor(type, name, message) {
-// 		this.type = type;
-// 		this.name = name;
-// 		this.message = message;
-// 	}
-// }
-
 //create initial prompt with list of options.
 
 function promptOptions() {
@@ -54,7 +46,7 @@ function promptOptions() {
 promptOptions();
 
 const viewAllEmployees = () => {
-	db.query('SELECT * FROM employee', (err, data) => {
+	db.query("SELECT * FROM employee", (err, data) => {
 		if (err) console.log(err);
 		console.table(data);
 		promptOptions();
@@ -62,7 +54,7 @@ const viewAllEmployees = () => {
 };
 
 const viewAllRoles = () => {
-	db.query('SELECT * FROM roles', (err, data) => {
+	db.query("SELECT * FROM roles", (err, data) => {
 		if (err) console.log(err);
 		console.table(data);
 		promptOptions();
@@ -70,7 +62,7 @@ const viewAllRoles = () => {
 };
 
 const viewAllDepartments = () => {
-	db.query('SELECT * FROM department', (err, data) => {
+	db.query("SELECT * FROM department", (err, data) => {
 		if (err) console.log(err);
 		console.table(data);
 		promptOptions();
@@ -80,7 +72,7 @@ const viewAllDepartments = () => {
 //query's to db, if err, logs err, display data with console.table.
 
 const addEmployee = () => {
-	db.query('SELECT * FROM employee', (err, data) => {
+	db.query("SELECT * FROM employee", (err, data) => {
 		if (err) console.log(err);
 		const employees = data.map((employee) => {
 			return {
@@ -88,8 +80,8 @@ const addEmployee = () => {
 				value: employee.id,
 			};
 		});
-		employees.push({ name: 'no manager', value: null });
-		db.query('SELECT * FROM roles', (err, data) => {
+		employees.push({ name: "no manager", value: null });
+		db.query("SELECT * FROM roles", (err, data) => {
 			if (err) console.log(err);
 			const roles = data.map((role) => {
 				return { name: role.title, value: role.id };
@@ -121,7 +113,7 @@ const addEmployee = () => {
 				])
 				.then((res) => {
 					db.query(
-						'INSERT INTO employee(first_name, last_name, role_id, manager_id) values(?, ?, ?, ?)',
+						"INSERT INTO employee(first_name, last_name, role_id, manager_id) values(?, ?, ?, ?)",
 						[res.firstName, res.lastName, res.roleId, res.managerId],
 						(err, data) => {
 							if (err) console.log(err);
@@ -136,7 +128,7 @@ const addEmployee = () => {
 
 // add role... select department data first as it's data is required to properly add a role. first query department, .then query roles, INSERT INTO to add.
 const addRole = () => {
-	db.query('SELECT * FROM department', (err, data) => {
+	db.query("SELECT * FROM department", (err, data) => {
 		if (err) console.log(err);
 		const departments = data.map((department) => {
 			return { name: department.name, value: department.id };
@@ -163,7 +155,7 @@ const addRole = () => {
 			])
 			.then((res) => {
 				db.query(
-					'INSERT INTO roles(title, salary, department_id) values(?, ?, ?)',
+					"INSERT INTO roles(title, salary, department_id) values(?, ?, ?)",
 					[res.title, res.salary, res.departmentId],
 					(err, data) => {
 						if (err) console.log(err);
@@ -180,14 +172,14 @@ const addDepartment = () => {
 	inquirer
 		.prompt([
 			{
-				type: 'input',
-				name: 'newDepartment',
-				message: 'Enter the new department into database.',
+				type: "input",
+				name: "newDepartment",
+				message: "Enter the new department into database.",
 			},
 		])
 		.then((res) => {
 			db.query(
-				'INSERT INTO department(name) values(?)',
+				"INSERT INTO department(name) values(?)",
 				[res.newDepartment],
 				(err, data) => {
 					if (err) console.log(err);
@@ -202,10 +194,10 @@ const addDepartment = () => {
 };
 
 //create function to update employee. query select the data, map data to a const, then push the data.
-//inquirer.prompt creates list of employees to select + list of roles.  
+//inquirer.prompt creates list of employees to select + list of roles.
 //Then UPDATE the employee into the db, and query from same db. Then console data to user.
 const updateEmployee = () => {
-	db.query('SELECT * FROM employee', (err, data) => {
+	db.query("SELECT * FROM employee", (err, data) => {
 		if (err) console.log(err);
 		const employees = data.map((employee) => {
 			return {
@@ -213,8 +205,8 @@ const updateEmployee = () => {
 				value: employee.id,
 			};
 		});
-		employees.push({ name: 'no manager', value: null });
-		db.query('SELECT * FROM roles', (err, data) => {
+		employees.push({ name: "no manager", value: null });
+		db.query("SELECT * FROM roles", (err, data) => {
 			if (err) console.log(err);
 			const roles = data.map((role) => {
 				return { name: role.title, value: role.id };
@@ -237,8 +229,12 @@ const updateEmployee = () => {
 				.then((updates) => {
 					const employeeId = updates.employeeUpdate;
 					const roleId = updates.roleUpdate;
-					console.log(roleId, employeeId)
-					const sqlUpdate ='UPDATE employee SET role_id =' + roleId + ' WHERE id = ' + employeeId;
+					console.log(roleId, employeeId);
+					const sqlUpdate =
+						"UPDATE employee SET role_id =" +
+						roleId +
+						" WHERE id = " +
+						employeeId;
 					db.query(sqlUpdate, (err, res) => {
 						if (err) console.log(err);
 						promptOptions();
